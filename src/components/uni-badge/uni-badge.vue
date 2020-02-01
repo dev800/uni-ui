@@ -61,9 +61,6 @@
 	$bage-height: 40rpx;
 
 	.uni-badge {
-		/* #ifndef APP-PLUS */
-		display: flex;
-		/* #endif */
 		flex-direction: row;
 		height: $bage-height;
 		line-height: $bage-height;
