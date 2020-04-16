@@ -1,5 +1,5 @@
 <template>
-	<view class="uni-section">
+	<view class="uni-section" nvue>
 		<view v-if="type" class="uni-section__head">
 			<view :class="type" class="uni-section__head-tag" />
 		</view>
@@ -114,6 +114,7 @@
 	}
 
 	.uni-section__content {
+		flex-direction: column;
 		flex: 1;
 		color: $uni-text-color;
 	}

@@ -6,7 +6,8 @@
 			<view class="flex uni-tab__cart-sub-left">
 				<view v-for="(item,index) in options" :key="index" class="flex uni-tab__cart-button-left uni-tab__shop-cart" @click="onClick(index,item)">
 					<view class="uni-tab__icon">
-						<image class="image" :src="item.icon" mode="widthFix" />
+						<uni-icons :type="item.icon" size="20" color="#646566"></uni-icons>
+						<!-- <image class="image" :src="item.icon" mode="widthFix" /> -->
 					</view>
 					<text class="uni-tab__text">{{ item.text }}</text>
 					<view class="flex uni-tab__dot-box">
@@ -16,7 +17,7 @@
 			</view>
 			<view :class="{'uni-tab__right':fill}" class="flex uni-tab__cart-sub-right ">
 				<view v-for="(item,index) in buttonGroup" :key="index" :style="{backgroundColor:item.backgroundColor,color:item.color}"
-				 class="flex uni-tab__cart-button-right" @click="buttonClick(index,item)"><text class="uni-tab__cart-button-right-text">{{ item.text }}</text></view>
+				 class="flex uni-tab__cart-button-right" @click="buttonClick(index,item)"><text :style="{color:item.color}" class="uni-tab__cart-button-right-text">{{ item.text }}</text></view>
 				<!-- <view class="flex uni-tab__cart-button-right uni-tab__color-y ">立即购买</view> -->
 			</view>
 		</view>
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+	import uniIcons from '../uni-icons/uni-icons.vue'
 	/**
 	 * GoodsNav 商品导航
 	 * @description 商品加入购物车、立即购买等
@@ -37,15 +39,18 @@
 	 */
 	export default {
 		name: 'UniGoodsNav',
+		components: {
+			uniIcons
+		},
 		props: {
 			options: {
 				type: Array,
 				default () {
 					return [{
-						icon: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/uni-ui/goodsnav/dianpu.png',
+						icon: 'shop',
 						text: '店铺'
 					}, {
-						icon: 'https://img-cdn-qiniu.dcloud.net.cn/uniapp/uni-ui/goodsnav/carts.png',
+						icon: 'cart',
 						text: '购物车'
 					}]
 				}
