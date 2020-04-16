@@ -221,6 +221,7 @@
 	.uni-navbar--fixed {
 		position: fixed;
 		z-index: 998;
+		width: 100%;
 	}
 
 	.uni-navbar--shadow {
