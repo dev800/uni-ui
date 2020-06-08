@@ -11,8 +11,8 @@
 			<uni-section title="左侧滑出" type="line"></uni-section>
 			<view class="example-body">
 				<view class="word-btn draw-cotrol-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70"
-				 @click="show('left')"><text class="word-btn-white">显示Drawer</text></view>
-				<uni-drawer :visible="showLeft" mode="left" :width="320" @close="closeDrawer('left')">
+				 @click="showDrawer('showLeft')"><text class="word-btn-white">显示Drawer</text></view>
+				<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
 					<!-- #ifndef MP-BAIDU || MP-ALIPAY || MP-TOUTIAO -->
 					<uni-list>
 						<uni-list-item title="Item1" />
@@ -28,7 +28,7 @@
 					</view>
 					<!-- #endif -->
 					<view class="close">
-						<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="hide"><text
+						<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="closeDrawer('showLeft')"><text
 							 class="word-btn-white">关闭Drawer</text></view>
 					</view>
 				</uni-drawer>
@@ -36,25 +36,25 @@
 			<uni-section title="右侧滑出" type="line"></uni-section>
 			<view class="example-body">
 				<view class="word-btn draw-cotrol-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70"
-				 @click="show('right')"><text class="word-btn-white">显示Drawer</text></view>
-				<uni-drawer :visible="showRight" mode="right" @close="closeDrawer('right')">
-					<!-- #ifndef MP-BAIDU || MP-ALIPAY || MP-TOUTIAO -->
-					<uni-list>
-						<uni-list-item title="Item1" />
-						<uni-list-item title="Item2" />
-						<uni-list-item class="last-list-item" :show-badge="true" title="Item3" badge-text="12" />
-					</uni-list>
-					<!-- #endif -->
-					<!-- #ifdef MP-BAIDU || MP-ALIPAY || MP-TOUTIAO -->
-					<view class="uni-list">
-						<uni-list-item title="Item1" />
-						<uni-list-item title="Item2" />
-						<uni-list-item class="last-list-item" :show-badge="true" title="Item3" badge-text="12" />
-					</view>
-					<!-- #endif -->
-					<view class="close">
-						<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="hide"><text
-							 class="word-btn-white">关闭Drawer</text></view>
+				 @click="showDrawer('showRight')"><text class="word-btn-white">显示Drawer</text></view>
+				<uni-drawer ref="showRight" mode="right" :mask-click="false" @change="change($event,'showRight')">
+					<view class="scroll-view">
+						<scroll-view class="scroll-view-box" scroll-y="true" >
+							<view class="info">
+								<text class="info-text">右侧遮罩只能通过按钮关闭，不能通过点击遮罩关闭</text>
+							</view>
+							<view class="close">
+								<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="closeDrawer('showRight')"><text
+									 class="word-btn-white">关闭Drawer</text></view>
+							</view>
+							<view class="info-content" v-for="item in 100" :key="item">
+								<text>可滚动内容 {{item}}</text>
+							</view>
+							<view class="close">
+								<view class="word-btn" hover-class="word-btn--hover" :hover-start-time="20" :hover-stay-time="70" @click="closeDrawer('showRight')"><text
+									 class="word-btn-white">关闭Drawer</text></view>
+							</view>
+						</scroll-view>
 					</view>
 				</uni-drawer>
 			</view>
@@ -62,13 +62,7 @@
 	</view>
 </template>
 <script>
-	import uniDrawer from '@/components/uni-drawer/uni-drawer.vue'
-	import uniList from '@/components/uni-list/uni-list.vue'
-	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
-	import uniSection from '@/components/uni-section/uni-section.vue'
-	import uniIcons from '@/components/uni-icons/uni-icons.vue'
 	export default {
-		components: {},
 		data() {
 			return {
 				showRight: false,
@@ -76,34 +70,33 @@
 			}
 		},
 		methods: {
-			show(e) {
-				console.log("show", e);
-				if (e === 'left') {
-					this.showLeft = true
-				} else {
-					this.showRight = true
-				}
+			confirm(){},
+			// 打开窗口
+			showDrawer(e) {
+				this.$refs[e].open()
 			},
-			hide() {
-				console.log("hide");
-				this.showLeft = false
-				this.showRight = false
-			},
+			// 关闭窗口
 			closeDrawer(e) {
-				if (e === 'left') {
-					this.showLeft = false
-				} else {
-					this.showRight = false
-				}
+				this.$refs[e].close()
 			},
-			confirm() {}
+			// 抽屉状态发生变化触发
+			change(e, type) {
+				console.log((type === 'showLeft' ? '左窗口' : '右窗口') + (e ? '打开' : '关闭'));
+				this[type] = e
+			}
 		},
 		onNavigationBarButtonTap(e) {
-			this.showRight = !this.showRight
+			if(this.showLeft){
+				this.$refs.showLeft.close()
+			}else{
+				this.$refs.showLeft.open()
+			}
 		},
+		// app端拦截返回事件 ，仅app端生效
 		onBackPress() {
 			if (this.showRight || this.showLeft) {
-				this.hide()
+				this.$refs.showLeft.close()
+				this.$refs.showRight.close()
 				return true
 			}
 		}
@@ -142,8 +135,8 @@
 
 	.uni-drawer-info {
 		background-color: #ffffff;
-		padding: 30rpx;
-		padding-top: 10rpx;
+		padding: 15px;
+		padding-top: 5px;
 		color: #3b4144;
 	}
 
@@ -162,7 +155,7 @@
 	}
 
 	.close {
-		padding: 30rpx;
+		padding: 15px;
 	}
 
 	.example-body {
@@ -175,5 +168,34 @@
 
 	.draw-cotrol-btn {
 		flex: 1;
+	}
+
+	.info {
+		padding: 15px;
+		color: #666;
+	}
+
+	.info-text {
+		font-size: 14px;
+		color: #666;
+	}
+	.scroll-view {
+		/* #ifndef APP-NVUE */
+		width: 100%;
+		height: 100%;
+		/* #endif */
+		flex:1
+	}
+	// 处理抽屉内容滚动
+	.scroll-view-box {
+		flex: 1;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+	}
+	.info-content {
+		padding: 5px 15px;
 	}
 </style>

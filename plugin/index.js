@@ -47,12 +47,12 @@ class CopyPlugin {
         // 获取要copy 的路径
         const toFilePath = path.join(to, name, '..', basename + '.nvue')
 
-        console.log(path.join(filePath, '..'))
-        console.log(from)
+        // console.log(path.join(filePath, '..'))
+        // console.log(from)
         if (path.join(filePath, '..').indexOf(from) === -1) {
-          console.log('不修改这个文件', filePath)
+          // console.log('不修改这个文件', filePath)
         } else {
-          console.log('同步文件到:', toFilePath)
+          // console.log('同步文件到:', toFilePath)
           fs.copySync(filePath, toFilePath)
         }
 
